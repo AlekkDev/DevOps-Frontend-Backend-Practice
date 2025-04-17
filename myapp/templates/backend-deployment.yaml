@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment # type of kubernetes resource
+metadata:
+  name: backend # name of the deployment
+spec:
+  replicas: 1 # 1 running pod/instance
+  selector:
+    matchLabels: #find pods with this label that belong to this deployment
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend # label for pod (match with selector)
+    spec: #pod specifications
+      containers:
+      - name: backend # container name
+        image: backend-app # image name
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8000 #GO app port listening
+        resources:
+          requests: #minimum resources
+            cpu: "100m"
+            memory: "256Mi"
+          limits: # maximum resources
+            cpu: "250m"
+            memory: "512Mi"
+        # Health check - determines if container needs restarting
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8000
+          initialDelaySeconds: 10 #wait 10 seconds before first check
+          periodSeconds: 5 #check every 5 seconds
+        # Readiness check - determines if container can receive traffic
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 5

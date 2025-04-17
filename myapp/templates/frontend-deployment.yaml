@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment # type of kubernetes resource
+metadata:
+  name: frontend
+spec:    #specifications
+  replicas: 1 # single instance
+  selector:  # selector to find the pods that belong to this deployment
+    matchLabels:
+      app: frontend # label to match
+  template:
+    metadata:
+      labels:
+        app: frontend # label for pod (match with selector)
+    spec:
+      containers:
+      - name: frontend # container name
+        image: frontend-app # image name
+        imagePullPolicy: Never #use local image only
+        ports: # port of container to expose
+        - containerPort: 5000 #Flask app port listening
+        env: #environemnt variables
+        - name: BACKEND_URL #inserted into flask app
+          valueFrom:
+            secretKeyRef: #Gets value from Kubernetes secret
+              name: frontend-secret #secret name
+              key: BACKEND_URL #key in secret
+        resources:
+          requests: #minimum resources
+            cpu: "100m"
+            memory: "256Mi"
+          limits: #maximum resources
+            cpu: "250m"
+            memory: "512Mi"
