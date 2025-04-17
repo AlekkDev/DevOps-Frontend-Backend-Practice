@@ -26,7 +26,6 @@ frontend/**frontend.Dockerfile**
 ## Kubernetes Resource Structure Diagram
 ![Kubernetes_cluster.jpg](images/Kubernetes_cluster.jpg)
 
-
 ## Request Flow Diagram
 
 ![Request_flow2.jpg](images/Request_flow2.jpg)
